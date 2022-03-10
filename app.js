@@ -8,6 +8,44 @@ let imgUrl = ""
 let dishType = []
 let totalTime = 0
 
+//olof search
+searchBar.addEventListener('keyup' , (e) => {
+	document.querySelector("#food-card-section").innerHTML = ""
+	const searchString = e.target.value;
+	const filteredCharacters = hits.filter(search => {
+		return String(search.recipe.label).toLowerCase().includes(searchString.toLowerCase())
+	});
+	
+	if (searchString === "") {
+		loop()
+	} else {
+		for(let i = 0; i < filteredCharacters.length; i++) {
+
+			let label = filteredCharacters[i].recipe.label
+	
+			let imgUrl = filteredCharacters[i].recipe.image
+	
+			let dishType = filteredCharacters[i].recipe.dishType.join(" / ")
+	
+			let totalTime = filteredCharacters[i].recipe.totalTime
+	
+			document.querySelector("#food-card-section")
+			.innerHTML += 
+			`
+			<div class="card-div">
+				<div class="card-label-wrapper">
+					<h1 class="card-label">${label}</h1>
+				</div>
+				<img class="card-img" src="${imgUrl}" alt="">
+				<p class="card-dishType">${dishType}</p>
+				<button class="card-btn">See more</button>
+			</div>
+			`
+		}
+	}
+});
+
+//olof search end
 
 async function fetchDatAPI() {
 	const app_key = 'ac0e5b86b0b49bedecc8e83ba02a64a4'
