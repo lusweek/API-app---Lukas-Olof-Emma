@@ -1,70 +1,100 @@
 
 
-let hits = {}
-
-let ingrediences = []
-let lable = ""
-let imgUrl = "" 
-let dishType = []
-let totalTime = 0
-
 //olof search
-searchBar.addEventListener('keyup' , (e) => {
-	document.querySelector("#food-card-section").innerHTML = ""
-	const searchString = e.target.value;
-	const filteredCharacters = hits.filter(search => {
-		return String(search.recipe.label).toLowerCase().includes(searchString.toLowerCase())
-	});
+// searchBar.addEventListener('keyup' , (e) => {
+// 	document.querySelector("#food-card-section").innerHTML = ""
+// 	const searchString = e.target.value;
+// 	const filteredCharacters = hits.filter(search => {
+// 		return String(search.recipe.label).toLowerCase().includes(searchString.toLowerCase())
+		
+// 	});
 	
-	if (searchString === "") {
-		loop()
-	} else {
-		for(let i = 0; i < filteredCharacters.length; i++) {
+// 	if (searchString === "") {
+// 		console.log(filteredCharacters)
+// 		loop()
+// 	} else {
+// 		for(let i = 0; i < filteredCharacters.length; i++) {
 
-			let label = filteredCharacters[i].recipe.label
+// 			let label = filteredCharacters[i].recipe.label
 	
-			let imgUrl = filteredCharacters[i].recipe.image
+// 			let imgUrl = filteredCharacters[i].recipe.image
 	
-			let dishType = filteredCharacters[i].recipe.dishType.join(" / ")
+// 			let dishType = filteredCharacters[i].recipe.dishType.join(" / ")
 	
-			let totalTime = filteredCharacters[i].recipe.totalTime
+// 			let totalTime = filteredCharacters[i].recipe.totalTime
 	
-			document.querySelector("#food-card-section")
-			.innerHTML += 
-			`
-			<div class="card-div">
-				<div class="card-label-wrapper">
-					<h1 class="card-label">${label}</h1>
-				</div>
-				<img class="card-img" src="${imgUrl}" alt="">
-				<p class="card-dishType">${dishType}</p>
-				<button class="card-btn">See more</button>
-			</div>
-			`
-		}
-	}
-});
+// 			document.querySelector("#food-card-section")
+// 			.innerHTML += 
+// 			`
+// 			<div class="card-div">
+// 				<div class="card-label-wrapper">
+// 					<h1 class="card-label">${label}</h1>
+// 				</div>
+// 				<img class="card-img" src="${imgUrl}" alt="">
+// 				<p class="card-dishType">${dishType}</p>
+// 				<button class="card-btn">See more</button>
+// 			</div>
+// 			`
+// 		}
+// 	}
+// });
 
 //olof search end
 
-async function fetchDatAPI() {
-	const app_key = 'ac0e5b86b0b49bedecc8e83ba02a64a4'
-	const app_id = '95c34c74'
-	const search = "veggi"
-	
-	 baceURL = `https://api.edamam.com/search?q=${search}&app_id=${app_id}&app_key=${app_key}`;
-	result = await fetch(baceURL);
-// Fyller mitt tomma objekt med data
-	data = await result.json()
-	hits = data.hits
-	console.log(hits[0].recipe)
+// Lukas Code start --------------------------------
+
+
+// Skapar funktioner för att öppna och stänga modelen
+const openModal = () => {
+	document.querySelector('#modal-div').style.display='flex'
 }
 
-const loop = () => {
+const closeModal = () => {
+	document.querySelector('#modal-div').style.display='none'
+}
+
+
+
+// När man klickar på submit knappen blir 'text' det man skrivit i sök-rutan, t.ex. 'pizza'. Denna text skickas med 
+// 	till functionen fetchDataAPI. 
+
+// e.preventDefault() gör att sidan inte uppdateras när man klickar på submit. 
+
+const form = document.getElementById('form')
+
+form.addEventListener('submit', (e) => {
+	openModal()
+
+	document.querySelector("#food-card-section").innerHTML = ''
+	e.preventDefault()
+
+	let text = document.getElementById('text')
+	fetchDatAPI(text.value)
+})
+
+//property är det man skrev i textrutan, t.ex. pizza, vilket blir det som söks. 
+
+async function fetchDatAPI(property) {
+	const app_key = 'ac0e5b86b0b49bedecc8e83ba02a64a4'
+	const app_id = '95c34c74'
+	
+	const result = await fetch(`https://api.edamam.com/search?q=${property}&app_id=${app_id}&app_key=${app_key}`)
+	const data = await result.json()
+	const hits = data.hits
+	
+	
+	if (hits.length === 0) {
+		emptyCard()
+	} else {
+		loop(hits)
+	}
+	closeModal()
+}
+
+const loop = (hits) => {
 	for(let i = 0; i < hits.length; i++) {
 
 		let label = hits[i].recipe.label
-		console.log(label)
 
 		let imgUrl = hits[i].recipe.image
 
@@ -87,33 +117,21 @@ const loop = () => {
 	}
 }
 
-const timeout = setTimeout(() => [
-	// getIngredienses()
-	loop()
-], 2000);
-
-
-/* DENNA DATA VILL JAG HA
-	lable = "",
-	imgUrl = "", 
-	dishType = [],
-	totalTime = 0
-*/
-
-
-
-
-/* INGRITIENSER
-const getIngredienses = () => {
-	const ingredients = hits[1].recipe.ingredients
-	for(let i = 0; i <= ingredients.length; i++){
-	console.log(ingredients)
-	}
+const emptyCard = () => {
+	console.log('emptyCard körs')
+	document.querySelector("#food-card-section").innerHTML = 
+	`
+	<div id="no-search" class="card-div">
+				<div class="card-label-wrapper">
+				</div>
+				<p class="card-dishType">No search results... try again</p>
+			</div>
+	`
 }
-*/
 
-window.addEventListener("load", () => fetchDatAPI())
- 
+
+// Lukas Code start --------------------------------
+
 
 
 // HOW map. WORKS

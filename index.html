@@ -8,14 +8,22 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="searchWrapper">
-        <input
-            type="text"
-            name="searchBar"
-            id="searchBar"
-            placeholder="Search for recipes"
-        />
-    </div>
+
+   <form id="form">
+       <div id="form-wrapper">
+        <label id="label" for="Search">Recipes for:</label>
+        <input id="text" type="text" name="text">
+        <button id="search-btn" type="submit">Search</button>
+       </div>
+   </form>
+
+   <div id="modal-div">
+       <div id="modal-box">
+        <div id="modal-text-box">
+            <h1>Searching...</h1>
+        </div>
+       </div>
+   </div>
 
     <section id="food-card-section"></section>
 
